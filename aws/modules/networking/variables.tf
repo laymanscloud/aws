@@ -1,3 +1,11 @@
-variable "vpc_cidr" {
-  default = "us-west-2"
-}
+variable "region" {}
+  
+variable "environment" {}
+
+variable "vpc_cidr" {}
+
+variable "public_subnets_cidr" {}
+
+variable "private_subnets_cidr" {}
+
+variable "availability_zones" {}
