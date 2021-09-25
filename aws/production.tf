@@ -1,5 +1,17 @@
+   
+resource "random_id" "random_id_prefix" {
+  byte_length = 2
+}
+/*====
+Variables used across all modules
+======*/
+locals {
+  production_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
+}
+
 module "networking" {
-source = "./modules/networking"
+  source = "./modules/networking"
+
   region               = "${var.region}"
   environment          = "${var.environment}"
   vpc_cidr             = "${var.vpc_cidr}"
