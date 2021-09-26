@@ -5,6 +5,8 @@ resource "random_id" "random_id_prefix" {
 /*====
 Variables used across all modules
 ======*/
+
+// production_availability_zones covers the az's for the given region
 locals {
   production_availability_zones = ["${var.region}a", "${var.region}b", "${var.region}c"]
 }
