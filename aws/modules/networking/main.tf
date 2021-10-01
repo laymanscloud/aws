@@ -119,7 +119,7 @@ resource "aws_route_table_association" "private" {
 
 /*====
 VPC's Default Security Group
-======*/
+======
 resource "aws_security_group" "default" {
   name        = "${var.environment}-default-sg"
   description = "Default security group to allow inbound/outbound from the VPC"
@@ -140,6 +140,47 @@ resource "aws_security_group" "default" {
     self      = "true"
   }
 
+  tags = {
+    Environment = "${var.environment}"
+  }
+}*/
+locals {
+  ports_in = [
+    443,
+    80,
+    22
+  ]
+  ports_out = [
+    0
+  ]
+}
+
+resource "aws_security_group" "default" {
+  name        = "${var.environment}-default-sg"
+  description = "Default security group to allow inbound/outbound from the VPC"
+  vpc_id      = "${aws_vpc.vpc.id}"
+  depends_on  = [aws_vpc.vpc]
+
+  dynamic "ingress" {
+    for_each = toset(local.ports_in)
+    content {
+      description      = "HTTPS from VPC"
+      from_port        = ingress.value
+      to_port          = ingress.value
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+    }
+  }
+
+  dynamic "egress" {
+    for_each = toset(local.ports_out)
+    content {
+      from_port        = egress.value
+      to_port          = egress.value
+      protocol         = "-1"
+      cidr_blocks      = ["0.0.0.0/0"]
+    }
+  }
   tags = {
     Environment = "${var.environment}"
   }
